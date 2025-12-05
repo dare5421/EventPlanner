@@ -5,9 +5,11 @@ namespace EventPlanner.Domain.Entities;
 public class User
 {
     public Guid Id { get; private set; }
+    // Value Objects
     public EmailAddress Email { get; private set; } 
     public string FirstName { get; private set; }
     public string LastName { get; private set; }
+    // this is set by Infrastructure, but stored here
     public string PasswordHash { get; private set; }
 
     private User()
@@ -30,6 +32,9 @@ public class User
         LastName = lastName;
 
     }
+
+    //Navigation Properties
+    public ICollection<Registration> Registrations { get; } = new List<Registration>();
     
     public void SetPasswordHash(string passwordHash)
     {
