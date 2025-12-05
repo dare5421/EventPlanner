@@ -1,5 +1,3 @@
-using System.Runtime.InteropServices;
-
 namespace EventPlanner.Domain.Entities;
 
 public class Event
@@ -11,6 +9,53 @@ public class Event
     public DateTime Date { get; private set; }
     public int Capacity { get; private set; }
 
-    // STATE/BEHAVIOR TRACKING (Crucial!)
+    public Event(Guid id, string title, DateTime date, int capacity)
+    {
+        Id = id;
+        if (string.IsNullOrWhiteSpace(title))
+        {
+            throw new ArgumentException("Title cannot be empty.", nameof(title));
+        }
+        Title = title;
+        Date = date;
+        if (capacity < 0)
+        {
+            throw new ArgumentException("Capacity cannot be negative.", nameof(capacity));
+        }
+        Capacity = capacity;
+    }
 
+    private Event()
+    {
+        
+    }
+
+    public ICollection<Registration> Registrations { get; } = new List<Registration>();
+
+    public bool CanRegister()
+    {
+        return Registrations.Count < Capacity;
+    }
+
+    public void ReserveSeat()
+    {
+        if(!CanRegister())
+        {
+            throw new InvalidOperationException("Event is at full capacity.");
+        }
+        // Logic to reserve a seat (e.g., increment a counter or add a registration)
+    }
+
+    public void UpdateTitle(string newTitle)
+    {
+        if (string.IsNullOrWhiteSpace(newTitle))
+        {
+            throw new ArgumentException("Title cannot be empty.", nameof(newTitle));
+        }
+        Title = newTitle;
+    }
+    public void Reschedule(DateTime newDate)
+    {
+        Date = newDate;
+    }
 }
