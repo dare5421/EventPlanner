@@ -9,9 +9,9 @@ public class ApplicationDbContext : DbContext{
         : base(options)
     {
     }
-    public DbSet<Event> Events => Set<Event>();
-    public DbSet<User> Users => Set<User>();
-    public DbSet<Registration> Registrations => Set<Registration>();
+    public DbSet<Event> Events {get; set;} = default!;
+    public DbSet<User> Users { get; set; } = default!;
+    public DbSet<Registration> Registrations { get; set; } = default!;
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

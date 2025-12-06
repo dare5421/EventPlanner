@@ -1,3 +1,5 @@
+using EventPlanner.Domain.Exceptions;
+
 namespace EventPlanner.Domain.Entities;
 
 public class Event
@@ -34,14 +36,14 @@ public class Event
 
     public bool CanRegister()
     {
-        return Registrations.Count < Capacity;
+        return this.Registrations.Count < this.Capacity;
     }
 
     public void ReserveSeat()
     {
         if(!CanRegister())
         {
-            throw new InvalidOperationException("Event is at full capacity.");
+            throw new EventFullException(this.Id);
         }
         // Logic to reserve a seat (e.g., increment a counter or add a registration)
     }
