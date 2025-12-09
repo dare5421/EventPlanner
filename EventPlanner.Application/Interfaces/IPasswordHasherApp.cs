@@ -9,5 +9,9 @@ public interface IPasswordHasherApp
     string HashPassword(string password);
 
     // 2. Verification: Still needs the User entity for checking the stored hash.
-    PasswordVerificationResult VerifyHashedPassword(User user, string hashedPassword, string providedPassword);
+    PasswordVerificationResult VerifyHashedPassword(
+        User user,
+        string hashedPassword,
+        string providedPassword
+    );
 }
