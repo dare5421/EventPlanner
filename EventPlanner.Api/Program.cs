@@ -44,6 +44,10 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     // DANGER: Removed app.MapOpenApi();
+    using (var scope = app.Services.CreateScope())
+    {
+        var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();       
+    }
 }
 
 app.UseHttpsRedirection();
