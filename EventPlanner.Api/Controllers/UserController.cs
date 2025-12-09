@@ -14,7 +14,13 @@ public class UserController : ControllerBase
     {
         _mediator = mediator;
     }
-
+    /// <summary>
+    /// Registers a new user account.
+    /// </summary>
+    [HttpPost("register")]
+    [ProducesResponseType(typeof(Guid), StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status409Conflict)] // For UserAlreadyExistsException
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> Register([FromBody] RegisterUserCommand command)
     {
         Guid userId = await _mediator.Send(command);

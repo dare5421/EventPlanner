@@ -20,7 +20,8 @@ public class UserRepository : IUserRepository
 
     public async Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken = default)
     {
-        return await _context.Users.FirstOrDefaultAsync(u => u.Email.Value == email, cancellationToken);
+        var emailValueObject = new EventPlanner.Domain.ValueObjects.EmailAddress(email);
+        return await _context.Users.FirstOrDefaultAsync(u => u.Email == emailValueObject, cancellationToken);
     }
 
     public async Task<User?> GetByIdAsync(Guid userId, CancellationToken cancellationToken = default)
