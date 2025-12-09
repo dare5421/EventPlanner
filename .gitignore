@@ -3,6 +3,13 @@
 ##
 ## Get latest from https://github.com/github/gitignore/blob/main/VisualStudio.gitignore
 
+# Entity Framework Core Temporary Files
+*.db
+*.sqlite
+
+# macOS specific files
+.DS_Store
+
 # User-specific files
 *.rsuser
 *.suo
