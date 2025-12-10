@@ -9,11 +9,15 @@ using Microsoft.EntityFrameworkCore;
 using MediatR;
 using Microsoft.AspNetCore.Identity; // <-- FIX: Added for IPasswordHasher<T>
 using Microsoft.AspNetCore.Mvc;
+using EventPlanner.Api.Filters;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // FIX: Add Controllers for API endpoints
-builder.Services.AddControllers();
+builder.Services.AddControllers(options =>
+{
+    options.Filters.Add<GlobalExceptionFilter>();
+});
 
 // DANGER: Removed builder.Services.AddOpenApi();
 
@@ -37,6 +41,8 @@ builder.Services.AddScoped<
 
 // 3. Register your custom adapter service (IPasswordHasher is YOUR interface)
 builder.Services.AddScoped<IPasswordHasherApp, PasswordHasherService>();
+
+builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
 
 var app = builder.Build();
 

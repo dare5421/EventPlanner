@@ -1,3 +1,4 @@
+using EventPlanner.Application.Exceptions;
 using EventPlanner.Application.Interfaces;
 using EventPlanner.Domain.Repositories;
 using MediatR;
@@ -21,8 +22,7 @@ public class LoginUserHandler : IRequestHandler<LoginUserQuery, LoginDto>
         var user = await _userRepository.GetByEmailAsync(request.Email, cancellationToken);
         if (user is null)
         {
-            //TODO: Use a custom exception NotFoundException
-            throw new Exception("User not found");
+            throw new NotFoundException("User not found");
         }
 
         var verficationResult = _passwordHasher.VerifyHashedPassword(
@@ -32,8 +32,7 @@ public class LoginUserHandler : IRequestHandler<LoginUserQuery, LoginDto>
         );
         if (verficationResult != PasswordVerificationResult.Success)
         {
-            //TODO: Use a custom exception UnauthorizedException
-            throw new Exception("Invalid password");
+            throw new UnauthorizedException("Invalid credentials");
         }
 
         var token = _jwtTokenService.GenerateToken(user);
@@ -46,7 +45,3 @@ public class LoginUserHandler : IRequestHandler<LoginUserQuery, LoginDto>
     }
 }
 
-public interface IJwtTokenService
-{
-    string GenerateToken(Domain.Entities.User user);   
-}
