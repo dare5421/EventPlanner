@@ -25,7 +25,7 @@ public class JwtTokenService : IJwtTokenService
         };
 
         // 2. Define Secret Key (must be strong and retrived from configuration)
-        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:SecretKey"]
+        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JwtSettings:SecretKey"]
             ?? throw new InvalidOperationException("JWT Secret Key is not configured."))
         );
 

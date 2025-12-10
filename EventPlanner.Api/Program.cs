@@ -9,15 +9,14 @@ using Microsoft.EntityFrameworkCore;
 using MediatR;
 using Microsoft.AspNetCore.Identity; // <-- FIX: Added for IPasswordHasher<T>
 using Microsoft.AspNetCore.Mvc;
-using EventPlanner.Api.Filters;
+
+using EventPlanner.Api.Middleware;
+using Microsoft.AspNetCore.Builder;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // FIX: Add Controllers for API endpoints
-builder.Services.AddControllers(options =>
-{
-    options.Filters.Add<GlobalExceptionFilter>();
-});
+builder.Services.AddControllers();
 
 // DANGER: Removed builder.Services.AddOpenApi();
 
@@ -46,13 +45,15 @@ builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
 
 var app = builder.Build();
 
+app.UseMiddleware<ExceptionHandlingMiddleware>();
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     // DANGER: Removed app.MapOpenApi();
     using (var scope = app.Services.CreateScope())
     {
-        var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();       
+        var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
     }
 }
 
