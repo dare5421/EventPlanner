@@ -52,7 +52,9 @@ public class ApplicationDbContext : DbContext{
         // Registration Entity configuration (many-to-many relationship)
         modelBuilder.Entity<Registration>(builder =>
         {
-            builder.HasKey(r => new { r.UserId, r.EventId });
+            builder.HasKey(r => r.Id);
+
+            builder.HasIndex(r=>new{r.UserId, r.EventId}).IsUnique();
 
             // Relationship to User: Defines the foreign key relationship
             builder.HasOne(r => r.User)

@@ -39,6 +39,10 @@ public class ExceptionHandlingMiddleware
 
         switch (exception)
         {
+            case Domain.Exceptions.EventNotFoundException:
+                context.Response.StatusCode = StatusCodes.Status404NotFound;
+                break;
+                
             case Application.Exceptions.UserAlreadyExistsException:
                 context.Response.StatusCode = StatusCodes.Status409Conflict;
                 break;

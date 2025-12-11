@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using MediatR;
 using Microsoft.AspNetCore.Identity; // <-- FIX: Added for IPasswordHasher<T>
 using Microsoft.AspNetCore.Mvc;
-
+\
 using EventPlanner.Api.Middleware;
 using Microsoft.AspNetCore.Builder;
 
@@ -42,6 +42,9 @@ builder.Services.AddScoped<
 builder.Services.AddScoped<IPasswordHasherApp, PasswordHasherService>();
 
 builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
+
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddScoped<ICurrentUserService, CurrentUserService>();
 
 var app = builder.Build();
 

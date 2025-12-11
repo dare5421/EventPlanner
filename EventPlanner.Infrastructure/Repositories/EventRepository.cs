@@ -1,6 +1,7 @@
 using EventPlanner.Domain.Entities;
 using EventPlanner.Domain.Repositories;
 using EventPlanner.Infrastructure.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace EventPlanner.Infrastructure.Repositories;
 
@@ -19,7 +20,8 @@ public class EventRepository : IEventRepository
 
     public async Task<Event?> GetByIdAsync(Guid eventId, CancellationToken cancellationToken = default)
     {
-        return await _context.Events.FindAsync(eventId, cancellationToken);
+        // Use Include() to load related entities (Registrations)
+        return await _context.Events.Include(e => e.Registrations).FirstOrDefaultAsync(e => e.Id == eventId, cancellationToken);
     }
 
     public async Task UpdateAsync(Event eventEntity, CancellationToken cancellationToken = default)
