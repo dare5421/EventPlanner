@@ -24,6 +24,11 @@ public class EventRepository : IEventRepository
         return await _context.Events.Include(e => e.Registrations).FirstOrDefaultAsync(e => e.Id == eventId, cancellationToken);
     }
 
+    public async Task<IEnumerable<Event>> GetAllAsync(CancellationToken cancellationToken = default)
+    {
+        return await _context.Events.AsNoTracking().ToListAsync(cancellationToken);
+    }
+
     public async Task UpdateAsync(Event eventEntity, CancellationToken cancellationToken = default)
     {
         _context.Events.Update(eventEntity);

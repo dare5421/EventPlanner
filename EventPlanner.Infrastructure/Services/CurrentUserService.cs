@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using EventPlanner.Application.Interfaces;
 using EventPlanner.Domain.Entities;
 using Microsoft.AspNetCore.Http;
@@ -14,18 +15,25 @@ public class CurrentUserService : ICurrentUserService
     }
     public Guid? GetCurrentUserId()
     {
-        var claimPrincipal = _httpContextAccessor.HttpContext?.User;
-        if (claimPrincipal == null || !claimPrincipal.Identity?.IsAuthenticated == true)
+        var user = _httpContextAccessor.HttpContext?.User;
+
+        // 1. Is the user authenticated by the middleware?
+        if (user?.Identity?.IsAuthenticated != true)
+        {
+            return null; // This is the case if Auth middleware failed
+        }
+
+        // 2. Find the ID claim using standard and raw names
+        var idClaim = user.FindFirst(ClaimTypes.NameIdentifier) // Checks for the long URI
+                      ?? user.FindFirst("nameid");              // Checks for the raw JWT name
+
+        // 3. Check if the claim was found AND can be parsed
+        if (idClaim == null || !Guid.TryParse(idClaim.Value, out var userId))
         {
             return null;
         }
-        var userIdClaim = claimPrincipal.FindFirst("sub") 
-            ?? claimPrincipal.FindFirst("uid") 
-            ?? claimPrincipal.FindFirst("UserId");
-        if (userIdClaim == null || !Guid.TryParse(userIdClaim.Value, out var userId))
-        {
-            return null;
-        }
+
         return userId;
     }
+
 }
